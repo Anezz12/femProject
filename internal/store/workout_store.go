@@ -178,6 +178,7 @@ func (pg *PostgresWorkoutStore) UpdateWorkout(workout *Workout) error {
 		return err
 	}
 	defer tx.Rollback()
+	// bisa juuga menggunakan current_timestamp
 	query := `
 		UPDATE workouts
 		SET title = $1, description = $2, duration_minutes = $3, calories_burned = $4, updated_at = NOW()

@@ -1,2 +1,29 @@
-./database
-/database
+# Binaries
+tmp/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Database
+database/postgres-data/
+database/postgres-test-data/
+
+# Logs
+*.log
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+

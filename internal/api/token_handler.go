@@ -10,8 +10,8 @@ import (
 	"github.com/Anezz12/femProject/internal/utils"
 )
 
-type ToekenHandler struct {
-	tokenSotre store.TokenStore
+type TokenHandler struct {
+	tokenStore store.TokenStore
 	userStore  store.UserStore
 	logger     *log.Logger
 }
@@ -21,15 +21,15 @@ type createTokenRequest struct {
 	Password string `json:"password"`
 }
 
-func NewTokenHandler(tokenStore store.TokenStore, userStore store.UserStore, logger *log.Logger) *ToekenHandler {
-	return &ToekenHandler{
-		tokenSotre: tokenStore,
+func NewTokenHandler(tokenStore store.TokenStore, userStore store.UserStore, logger *log.Logger) *TokenHandler {
+	return &TokenHandler{
+		tokenStore: tokenStore,
 		userStore:  userStore,
 		logger:     logger,
 	}
 }
 
-func (h *ToekenHandler) HandlerCreateToken(w http.ResponseWriter, r *http.Request) {
+func (h *TokenHandler) HandlerCreateToken(w http.ResponseWriter, r *http.Request) {
 	var req createTokenRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
@@ -58,13 +58,13 @@ func (h *ToekenHandler) HandlerCreateToken(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	token, err := h.tokenSotre.CreateToken(user.ID, 24*time.Hour, "authentication")
+	token, err := h.tokenStore.CreateToken(user.ID, 24*time.Hour, "authentication")
 	if err != nil {
 		h.logger.Println("ERROR: createToken:", err)
 		utils.WriteJSON(w, http.StatusInternalServerError, utils.Envelope{"error": "Internal server error"})
 		return
 	}
 
-	utils.WriteJSON(w, http.StatusOK, utils.Envelope{"auth_token": token.Plaintext})
+	utils.WriteJSON(w, http.StatusOK, utils.Envelope{"auth_token": token})
 
 }

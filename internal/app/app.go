@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/Anezz12/femProject/internal/api"
+	"github.com/Anezz12/femProject/internal/middleware"
 	"github.com/Anezz12/femProject/internal/store"
 	migrations "github.com/Anezz12/femProject/migration"
 )
@@ -16,7 +17,8 @@ type Application struct {
 	Logger         *log.Logger
 	WorkoutHandler *api.WorkoutHandler
 	UserHandler    *api.UserHandler
-	TokenHandler   *api.ToekenHandler
+	TokenHandler   *api.TokenHandler
+	Middleware     middleware.UserMiddleware
 	DB             *sql.DB
 }
 
@@ -42,11 +44,14 @@ func NewApplication() (*Application, error) {
 	workoutHandler := api.NewWorkoutHandler(workoutStore, logger)
 	userHandler := api.NewUserHandler(userStore, logger)
 	tokenHandler := api.NewTokenHandler(tokenStore, userStore, logger)
+	middlewareHandler := middleware.UserMiddleware{UserStore: userStore}
+
 	app := &Application{
 		Logger:         logger,
 		WorkoutHandler: workoutHandler,
 		UserHandler:    userHandler,
 		TokenHandler:   tokenHandler,
+		Middleware:     middlewareHandler,
 		DB:             pgDB,
 	}
 
